@@ -1,4 +1,4 @@
-# AeroBeat Feature Template
+# AeroBeat Feature - Flow
 
 This is the official template for creating a **Feature** repository within the AeroBeat ecosystem.
 
