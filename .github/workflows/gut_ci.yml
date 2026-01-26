@@ -1,0 +1,60 @@
+name: AeroBeat Quality Gate
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  gut-tests:
+    name: Unit Tests & Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🧾 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+
+      - name: 🤖 Setup Godot
+        uses: chickensoft-games/setup-godot@v1
+        with:
+          version: 4.2.1 # Ensure this matches project version
+          use-dotnet: false
+
+      - name: 🧪 Run GUT Tests
+        # -gexit: Exit with error code on failure
+        # -gdir: Test directory
+        # -gcov_export_json: Export coverage report
+        run: |
+          godot --headless --script addons/gut/gut_cmdln.gd \
+            -gdir=res://test/unit \
+            -ginclude_subdirs \
+            -gexit \
+            -gcov_export_json=res://coverage.json
+
+      - name: 📊 Enforce 100% Coverage
+        if: success()
+        shell: python
+        run: |
+          import json
+          import sys
+          import os
+
+          if not os.path.exists('coverage.json'):
+              print("::error::Coverage report not found!")
+              sys.exit(1)
+
+          with open('coverage.json', 'r') as f:
+              data = json.load(f)
+          
+          # Parse coverage percentage (Structure depends on GUT version)
+          coverage = data.get('summary', {}).get('percent', 0)
+          
+          if coverage < 100:
+              print(f"::error::Coverage is {coverage}%. 100% is required.")
+              sys.exit(1)
+          
+          print(f"✅ Coverage is {coverage}%.")
