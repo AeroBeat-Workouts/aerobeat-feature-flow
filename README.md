@@ -1,6 +1,6 @@
-# AeroBeat Feature - Flow
+# AeroBeat Flow Feature
 
-This is the official template for creating a **Feature** repository within the AeroBeat ecosystem.
+This is the official codebase for AeroBeats Flow gameplay style.
 
 A **Feature** contains the pure gameplay logic for a specific mode (e.g., Boxing, Flow, Step). It is designed to be modular and plugged into an **Assembly**.
 
