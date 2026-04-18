@@ -19,18 +19,24 @@ jobs:
           lfs: true
 
       - name: 🤖 Setup Godot
-        uses: chickensoft-games/setup-godot@v1
+        uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.2.1 # Ensure this matches project version
+          version: 4.6.2
           use-dotnet: false
+
+      - name: 🔧 Prepare hidden testbed
+        run: python3 setup_dev.py
+
+      - name: 🧭 Import testbed project
+        run: godot --headless --path .testbed --import
 
       - name: 🧪 Run GUT Tests
         # -gexit: Exit with error code on failure
         # -gdir: Test directory
         # -gcov_export_json: Export coverage report
         run: |
-          godot --headless --script addons/gut/gut_cmdln.gd \
-            -gdir=res://test/unit \
+          godot --headless --path .testbed --script addons/gut/gut_cmdln.gd \
+            -gdir=res://tests \
             -ginclude_subdirs \
             -gexit \
             -gcov_export_json=res://coverage.json
@@ -43,11 +49,11 @@ jobs:
           import sys
           import os
 
-          if not os.path.exists('coverage.json'):
+          if not os.path.exists('.testbed/coverage.json'):
               print("::error::Coverage report not found!")
               sys.exit(1)
 
-          with open('coverage.json', 'r') as f:
+          with open('.testbed/coverage.json', 'r') as f:
               data = json.load(f)
           
           # Parse coverage percentage (Structure depends on GUT version)

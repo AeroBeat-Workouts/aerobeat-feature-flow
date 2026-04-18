@@ -35,9 +35,8 @@ def main():
         print("  + Cloning GUT into Testbed...")
         subprocess.run(["git", "clone", "https://github.com/bitwes/Gut.git", f"{target_dir}/gut"])
 
-    # Symlink Source & Tests
+    # Symlink source only. Repo-local unit tests now live directly under .testbed/tests.
     create_symlink("src", ".testbed/src")
-    create_symlink("test", ".testbed/test")
 
 if __name__ == "__main__":
     main()

@@ -24,7 +24,7 @@ A **Feature** contains the pure gameplay logic for a specific mode (e.g., Boxing
     python setup_dev.py
     ```
 3.  **Open in Godot:**
-    Import the `project.godot` file located inside the `.testbed/` folder.
+    Open the hidden `.testbed/project.godot` workbench in Godot `4.6.2 stable standard`.
 
 > **Note:** Features are libraries, not standalone games. We use a "Testbed" project (a minimal Godot project in a hidden folder) to run and debug the feature in isolation.
 
@@ -39,5 +39,5 @@ This template comes pre-configured with **GUT (Godot Unit Test)** workflows.
 ## 📂 Structure
 
 *   `src/` - The actual feature logic (GDScript). This is what gets distributed.
-*   `test/` - Unit tests.
-*   `.testbed/` - A local-only Godot project used to run/debug the feature.
+*   `.testbed/tests/` - Repo-local unit tests run by the hidden testbed.
+*   `.testbed/` - The hidden Godot workbench used to run/debug the feature.
