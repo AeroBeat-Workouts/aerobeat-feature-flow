@@ -68,5 +68,5 @@ godot --headless --path .testbed --script addons/gut/gut_cmdln.gd \
 
 - `.testbed/addons.jsonc` is the committed dev/test dependency contract.
 - The manifest pins `aerobeat-core` to `v0.1.0` and GUT to `main`.
-- Repo-local unit tests live under `.testbed/tests/`; the workbench now uses a committed `.testbed/src -> ../src` bridge instead of `setup_dev.py` runtime setup.
+- Repo-local unit tests live under `.testbed/tests/`; this repo's current package payload is rooted at `/`, so the workbench does not ship a `.testbed/src` bridge for this subset.
 - The current package shape is consumed from the repo root (`subfolder: "/"`) for downstream installs.
