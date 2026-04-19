@@ -1,0 +1,17 @@
+{
+  "$schema": "https://chickensoft.games/schemas/addons.schema.json",
+  "addons": {
+    // Batch 1 pins the foundational core contract for feature work.
+    "aerobeat-core": {
+      "url": "git@github.com:AeroBeat-Workouts/aerobeat-core.git",
+      "checkout": "v0.1.0",
+      "subfolder": "/"
+    },
+    // GUT drives the repo-local test suite inside the hidden testbed/workbench.
+    "gut": {
+      "url": "git@github.com:bitwes/Gut.git",
+      "checkout": "main",
+      "subfolder": "/addons/gut"
+    }
+  }
+}
