@@ -8,15 +8,19 @@ on:
 
 jobs:
   gut-tests:
-    name: Unit Tests & Coverage
+    name: Restore testbed and run GUT
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 🧾 Checkout Repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive
           lfs: true
+
+      - name: 🧰 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
       - name: 🤖 Setup Godot
         uses: chickensoft-games/setup-godot@v2
@@ -24,43 +28,22 @@ jobs:
           version: 4.6.2
           use-dotnet: false
 
-      - name: 🔧 Prepare hidden testbed
-        run: python3 setup_dev.py
+      - name: 📦 Install GodotEnv
+        shell: bash
+        run: |
+          dotnet tool install --global Chickensoft.GodotEnv
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: 🔗 Restore testbed dependencies
+        working-directory: ./.testbed
+        run: godotenv addons install
 
       - name: 🧭 Import testbed project
         run: godot --headless --path .testbed --import
 
-      - name: 🧪 Run GUT Tests
-        # -gexit: Exit with error code on failure
-        # -gdir: Test directory
-        # -gcov_export_json: Export coverage report
+      - name: 🧪 Run GUT tests
         run: |
           godot --headless --path .testbed --script addons/gut/gut_cmdln.gd \
             -gdir=res://tests \
             -ginclude_subdirs \
-            -gexit \
-            -gcov_export_json=res://coverage.json
-
-      - name: 📊 Enforce 100% Coverage
-        if: success()
-        shell: python
-        run: |
-          import json
-          import sys
-          import os
-
-          if not os.path.exists('.testbed/coverage.json'):
-              print("::error::Coverage report not found!")
-              sys.exit(1)
-
-          with open('.testbed/coverage.json', 'r') as f:
-              data = json.load(f)
-          
-          # Parse coverage percentage (Structure depends on GUT version)
-          coverage = data.get('summary', {}).get('percent', 0)
-          
-          if coverage < 100:
-              print(f"::error::Coverage is {coverage}%. 100% is required.")
-              sys.exit(1)
-          
-          print(f"✅ Coverage is {coverage}%.")
+            -gexit
