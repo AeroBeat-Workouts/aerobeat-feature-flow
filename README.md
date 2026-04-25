@@ -9,7 +9,8 @@ A **Feature** contains the pure gameplay logic for a specific mode (e.g., Boxing
 *   **Type:** Feature (Gameplay Logic)
 *   **License:** **GNU GPLv3** (Strict Copyleft)
 *   **Dependencies:**
-    *   `aerobeat-core` (Required)
+    *   `aerobeat-feature-core` (Canonical gameplay/runtime contract)
+    *   `aerobeat-content-core` (Required when the feature consumes authored Songs, Routines, Charts, or Workouts)
     *   `aerobeat-vendor-*` (Allowed)
 
 ## GodotEnv development flow
@@ -33,7 +34,7 @@ cd .testbed
 godotenv addons install
 ```
 
-That installs the pinned `aerobeat-core` foundation plus GUT into `.testbed/addons/`.
+That restores this repo's current dev/test manifest into `.testbed/addons/`. In the long-term lane model, Feature repos should describe themselves in terms of `aerobeat-feature-core` plus any adjacent contracts they actually consume, especially `aerobeat-content-core` for playable authored content.
 
 ### Open the workbench
 
@@ -67,6 +68,7 @@ godot --headless --path .testbed --script addons/gut/gut_cmdln.gd \
 ### Validation notes
 
 - `.testbed/addons.jsonc` is the committed dev/test dependency contract.
-- The manifest pins `aerobeat-core` to `v0.1.0` and GUT to `main`.
+- The current manifest still pins the transition-era `aerobeat-core` package key to `v0.1.0` alongside GUT `main`. Treat that as bootstrap-state drift, not the canonical long-term repo-boundary story.
+- Canonical lane ownership for live docs is `aerobeat-feature-core`, plus `aerobeat-content-core` when the feature consumes authored playable content.
 - Repo-local unit tests live under `.testbed/tests/`; this repo's current package payload is rooted at `/`, so the workbench does not ship a `.testbed/src` bridge for this subset.
 - The current package shape is consumed from the repo root (`subfolder: "/"`) for downstream installs.
