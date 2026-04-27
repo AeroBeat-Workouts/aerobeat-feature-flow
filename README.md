@@ -10,7 +10,7 @@ A **Feature** contains the pure gameplay logic for a specific mode (e.g., Boxing
 *   **License:** **GNU GPLv3** (Strict Copyleft)
 *   **Dependencies:**
     *   `aerobeat-feature-core` (Canonical gameplay/runtime contract)
-    *   `aerobeat-content-core` (Required when the feature consumes authored Songs, Routines, Charts, or Workouts)
+    *   `aerobeat-content-core` (Required when the feature consumes authored Songs, Charts, Sets, or Workouts)
     *   `aerobeat-vendor-*` (Allowed)
 
 ## GodotEnv development flow
