@@ -1,13 +1,14 @@
 {
   "$schema": "https://chickensoft.games/schemas/addons.schema.json",
   "addons": {
-    // Batch 1 pins the foundational core contract for feature work.
-    "aerobeat-core": {
-      "url": "git@github.com:AeroBeat-Workouts/aerobeat-core.git",
-      "checkout": "v0.1.0",
+    // Minimal current Flow workbench bootstrap for the retained active v1 feature repo.
+    // This pins the lane-appropriate feature core for shared gameplay/runtime contracts; do not read it as a catch-all long-term feature-lane dependency story.
+    "aerobeat-feature-core": {
+      "url": "git@github.com:AeroBeat-Workouts/aerobeat-feature-core.git",
+      "checkout": "main",
       "subfolder": "/"
     },
-    // GUT drives the repo-local test suite inside the hidden testbed/workbench.
+    // GUT drives the repo-local test suite inside the hidden flow workbench.
     "gut": {
       "url": "git@github.com:bitwes/Gut.git",
       "checkout": "main",

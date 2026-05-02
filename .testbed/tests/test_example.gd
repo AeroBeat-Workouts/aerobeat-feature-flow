@@ -1,33 +1,26 @@
 extends GutTest
 
 # ------------------------------------------------------------------------------
-# Example Unit Test
+# Flow Feature Sanity Tests
 # ------------------------------------------------------------------------------
-# This script demonstrates the basic structure of a GUT test file.
-# Run this via the GUT panel in the Editor or via Command Line.
+# Keep this file lightweight until repo-local Flow runtime code lands.
+# Run it via the GUT panel in the Editor or from the command line.
 
 func before_all():
-	# Runs once before all tests in this script.
-	# Use this to setup global resources or load heavy assets.
-	gut.p("Starting Example Tests...")
+	gut.p("Starting Flow feature sanity tests...")
 
 func before_each():
-	# Runs before each test function.
-	# Use this to reset state between tests.
 	pass
 
 func after_each():
-	# Runs after each test function.
-	# Use this to clean up nodes (queue_free).
 	pass
 
 func after_all():
-	# Runs once after all tests in this script.
-	gut.p("Finished Example Tests.")
+	gut.p("Finished Flow feature sanity tests.")
 
 func test_sanity_check():
 	assert_eq(1, 1, "Math should still work")
 
-func test_string_equality():
-	var project_name = "AeroBeat"
-	assert_eq(project_name, "AeroBeat", "Strings should match")
+func test_flow_feature_label():
+	var feature_name = "AeroBeat Flow Feature"
+	assert_eq(feature_name, "AeroBeat Flow Feature", "Feature label should stay stable")

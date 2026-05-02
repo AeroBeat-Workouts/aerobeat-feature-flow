@@ -1,29 +1,34 @@
-# AeroBeat Flow Feature
+# aerobeat-feature-flow
 
-This is the official codebase for AeroBeats Flow gameplay style.
+Current AeroBeat Flow gameplay feature package.
 
-A **Feature** contains the pure gameplay logic for a specific mode (e.g., Boxing, Flow, Step). It is designed to be modular and plugged into an **Assembly**.
+## Repository status
 
-## 📋 Repository Details
+`aerobeat-feature-flow` is a retained **active/current** AeroBeat v1 gameplay repo.
 
-*   **Type:** Feature (Gameplay Logic)
-*   **License:** **GNU GPLv3** (Strict Copyleft)
-*   **Dependencies:**
-    *   `aerobeat-feature-core` (Canonical gameplay/runtime contract)
-    *   `aerobeat-content-core` (Required when the feature consumes authored Songs, Charts, Sets, or Workouts)
-    *   `aerobeat-vendor-*` (Allowed)
+The current product truth for this repo is:
+
+- **official gameplay feature:** Flow
+- **official gameplay input posture:** camera-first
+- **official release order:** PC community first, mobile later, VR later
+- **feature-scope posture:** Flow remains current; removed peer-era wording for Dance/Step should not be reintroduced here
+
+## Architecture role
+
+This repo owns Flow-specific gameplay logic and feature-local workbench validation. Shared reusable gameplay/runtime contracts belong in `aerobeat-feature-core`, and authored playable content contracts belong in `aerobeat-content-core` when Flow consumes them.
 
 ## GodotEnv development flow
 
-This repo uses the AeroBeat GodotEnv package convention.
+This repo uses the AeroBeat Phase 2 GodotEnv package convention.
 
 - Canonical dev/test manifest: `.testbed/addons.jsonc`
 - Installed dev/test addons: `.testbed/addons/`
 - GodotEnv cache: `.testbed/.addons/`
 - Hidden workbench project: `.testbed/project.godot`
 - Repo-local unit tests: `.testbed/tests/`
+- Optional interactive/workbench scenes: `.testbed/scenes/`
 
-The repo root remains the package/published boundary for downstream consumers. Day-to-day development, debugging, and validation happen from the hidden `.testbed/` workbench using the pinned OpenClaw toolchain: Godot `4.6.2 stable standard`.
+The repo root is treated as the package/published boundary for downstream consumers. Day-to-day development, debugging, and validation happen from the hidden `.testbed/` workbench using the pinned OpenClaw toolchain: Godot `4.6.2 stable standard`.
 
 ### Restore dev/test dependencies
 
@@ -34,7 +39,7 @@ cd .testbed
 godotenv addons install
 ```
 
-That restores this repo's current dev/test manifest into `.testbed/addons/`. In the long-term lane model, Feature repos should describe themselves in terms of `aerobeat-feature-core` plus any adjacent contracts they actually consume, especially `aerobeat-content-core` for playable authored content.
+That restores this repo's current dev/test manifest into `.testbed/addons/`. The current manifest is intentionally described as a minimal bootstrap contract, not as the final long-term feature-lane dependency story.
 
 ### Open the workbench
 
@@ -44,7 +49,7 @@ From the repo root:
 godot --editor --path .testbed
 ```
 
-Use this `.testbed/` project as the canonical direct-development and bugfinding surface for feature work.
+Use this `.testbed/` project as the canonical direct-development and flow bugfinding surface.
 
 ### Import smoke check
 
@@ -67,8 +72,9 @@ godot --headless --path .testbed --script addons/gut/gut_cmdln.gd \
 
 ### Validation notes
 
-- `.testbed/addons.jsonc` is the committed dev/test dependency contract.
-- The current manifest still pins the transition-era `aerobeat-core` package key to `v0.1.0` alongside GUT `main`. Treat that as bootstrap-state drift, not the canonical long-term repo-boundary story.
-- Canonical lane ownership for live docs is `aerobeat-feature-core`, plus `aerobeat-content-core` when the feature consumes authored playable content.
-- Repo-local unit tests live under `.testbed/tests/`; this repo's current package payload is rooted at `/`, so the workbench does not ship a `.testbed/src` bridge for this subset.
+- `.testbed/addons.jsonc` is the only committed dev/test dependency contract.
+- The current manifest now carries a minimal `aerobeat-feature-core` + GUT bootstrap for shared feature/runtime contracts. Treat that as a narrow workbench dependency truth, not the canonical full long-term dependency story for an active Flow feature repo.
+- Canonical live feature-lane docs and shared runtime contracts belong in `aerobeat-feature-core`, with `aerobeat-content-core` layered in when Flow consumes authored playable content.
+- Repo-local unit tests live under `.testbed/tests/`; this package no longer uses a root-level `test/` directory.
+- If interactive workbench scenes are added later, place them under `.testbed/scenes/`.
 - The current package shape is consumed from the repo root (`subfolder: "/"`) for downstream installs.

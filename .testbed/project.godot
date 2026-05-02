@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 
-config/name="AeroBeat Feature Testbed"
+config/name="AeroBeat Flow Feature Testbed"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
 [editor_plugins]
