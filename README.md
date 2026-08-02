@@ -17,6 +17,16 @@ The current product truth for this repo is:
 
 This repo owns Flow-specific gameplay logic and mode-local workbench validation. Shared reusable gameplay/runtime contracts belong in `aerobeat-mode-core`, and authored playable content contracts belong in `aerobeat-content-core` when Flow consumes them.
 
+## Runtime package surface
+
+- `src/flow_mode_runner.gd` implements the pure Flow v1 rule engine over mode-core `ModeRunConfig`, `ModeTickFrame`, `ModeJudgementEvent`, `ModeScoreDelta`, and `ModeRunFragment`.
+- The runner consumes normalized `BodyCellInput` event rows for `left_wrist_cell_entered(cell, direction)`, `right_wrist_cell_entered(cell, direction)`, and `nose_cell_entered(cell, direction)`.
+- The runner also consumes Flow `squat_enabled` and `squat_disabled` transition rows.
+- Direction values follow the frozen body-cell convention: `0=up`, `1=down`, `2=right`, `3=left`, and `-1` for ambiguous or unavailable motion.
+- Notes, bursts, and arcs are wrist-hit targets. Bombs and obstacles are avoidance targets; obstacle semantics use nose cell entries. Calibration session updates remain non-scoring support input.
+
+The package stays mode-local: it does not import gameplay runner/session envelopes, clocks, fake streams, camera providers, raw landmarks, detector payloads, UI shell, or assembly code.
+
 ## GodotEnv development flow
 
 This repo uses the AeroBeat Phase 2 GodotEnv package convention.

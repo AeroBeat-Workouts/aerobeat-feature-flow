@@ -1,6 +1,11 @@
 {
   "$schema": "https://chickensoft.games/schemas/addons.schema.json",
   "addons": {
+    "aerobeat-mode-flow": {
+      "url": "..",
+      "source": "symlink",
+      "subfolder": "/"
+    },
     "aerobeat-mode-core": {
       "url": "../../aerobeat-mode-core",
       "subfolder": "/",
