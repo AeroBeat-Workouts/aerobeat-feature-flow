@@ -2,7 +2,7 @@ class_name FlowModeRunner
 extends "res://addons/aerobeat-mode-core/src/interfaces/mode_runner.gd"
 
 const ModeDescriptor := preload("res://addons/aerobeat-mode-core/src/data_types/mode_descriptor.gd")
-const ModeJudgementEvent := preload("res://addons/aerobeat-mode-core/src/data_types/mode_judgement_event.gd")
+const ModeJudgementEventScript := preload("res://addons/aerobeat-mode-core/src/data_types/mode_judgement_event.gd")
 const ModeRunConfig := preload("res://addons/aerobeat-mode-core/src/data_types/mode_run_config.gd")
 const ModeRunFragment := preload("res://addons/aerobeat-mode-core/src/data_types/mode_run_fragment.gd")
 const ModeScoreDelta := preload("res://addons/aerobeat-mode-core/src/data_types/mode_score_delta.gd")
@@ -145,7 +145,7 @@ func _reset_state() -> void:
 func _load_targets(raw_targets: Variant) -> void:
 	if not raw_targets is Array:
 		return
-	for raw_target in raw_targets:
+	for raw_target: Variant in raw_targets:
 		if not raw_target is Dictionary:
 			continue
 		var target := _normalize_target(raw_target)
@@ -258,7 +258,7 @@ func _judge_wrist_input(input_event: Dictionary, event_name: String, input_posit
 		if bool(target.judged):
 			continue
 		if String(target.kind) == "avoidance" and String(target.body_part) == "wrist" and _position_inside(target, input_position) and target.cells.has(int(cell_direction.cell)):
-			outputs.append_array(_apply_judgement(target.id, ModeJudgementEvent.RESULT_MISS, input_position, input_position - float(target.position_sec), 0.0, {"reason": "bomb_contact", "cell": int(cell_direction.cell), "direction": int(cell_direction.direction)}))
+			outputs.append_array(_apply_judgement(target.id, ModeJudgementEventScript.RESULT_MISS, input_position, input_position - float(target.position_sec), 0.0, {"reason": "bomb_contact", "cell": int(cell_direction.cell), "direction": int(cell_direction.direction)}))
 			continue
 		if String(target.kind) != "wrist_hit" or target.event != event_name:
 			continue
@@ -280,7 +280,7 @@ func _judge_nose_input(input_event: Dictionary, input_position: float) -> Array:
 		if String(target.kind) != "avoidance" or String(target.body_part) != "nose":
 			continue
 		if _position_inside(target, input_position) and target.cells.has(int(cell_direction.cell)):
-			outputs.append_array(_apply_judgement(target.id, ModeJudgementEvent.RESULT_MISS, input_position, input_position - float(target.position_sec), 0.0, {"reason": "obstacle_contact", "cell": int(cell_direction.cell), "direction": int(cell_direction.direction)}))
+			outputs.append_array(_apply_judgement(target.id, ModeJudgementEventScript.RESULT_MISS, input_position, input_position - float(target.position_sec), 0.0, {"reason": "obstacle_contact", "cell": int(cell_direction.cell), "direction": int(cell_direction.direction)}))
 	return outputs
 
 func _judge_transition_input(input_event: Dictionary, event_name: String, input_position: float) -> Array:
@@ -301,15 +301,15 @@ func _judge_timed_body_cell_target(target: Dictionary, input_position: float, in
 
 func _judge_timed_event_target(target: Dictionary, input_position: float, extra_metadata: Dictionary) -> Array:
 	var offset := input_position - float(target.position_sec)
-	var judgement := ModeJudgementEvent.RESULT_HIT
+	var judgement := ModeJudgementEventScript.RESULT_HIT
 	if offset < -float(target.early_window_sec):
-		judgement = ModeJudgementEvent.RESULT_EARLY
+		judgement = ModeJudgementEventScript.RESULT_EARLY
 	elif offset > float(target.late_window_sec):
-		judgement = ModeJudgementEvent.RESULT_LATE
+		judgement = ModeJudgementEventScript.RESULT_LATE
 	elif bool(target.get("requires_direction", false)):
 		var input_direction := int(extra_metadata.get("input_direction", -1))
 		if input_direction != int(target.direction):
-			judgement = ModeJudgementEvent.RESULT_MISS
+			judgement = ModeJudgementEventScript.RESULT_MISS
 			extra_metadata["reason"] = "direction_mismatch"
 	var accuracy := _accuracy_for(target, offset, judgement)
 	return _apply_judgement(target.id, judgement, input_position, offset, accuracy, extra_metadata)
@@ -321,7 +321,7 @@ func _judge_expired_targets(position_sec: float) -> Array:
 			continue
 		var miss_at := float(target.position_sec) + float(target.late_window_sec)
 		if position_sec > miss_at:
-			outputs.append_array(_apply_judgement(target.id, ModeJudgementEvent.RESULT_MISS, miss_at, float(target.late_window_sec), 0.0, {"reason": "expired"}))
+			outputs.append_array(_apply_judgement(target.id, ModeJudgementEventScript.RESULT_MISS, miss_at, float(target.late_window_sec), 0.0, {"reason": "expired"}))
 	return outputs
 
 func _judge_cleared_avoidance_targets(position_sec: float) -> Array:
@@ -331,7 +331,7 @@ func _judge_cleared_avoidance_targets(position_sec: float) -> Array:
 			continue
 		var clear_at := float(target.end_sec)
 		if position_sec > clear_at:
-			outputs.append_array(_apply_judgement(target.id, ModeJudgementEvent.RESULT_HIT, clear_at, 0.0, 1.0, {"reason": "avoidance_clear"}))
+			outputs.append_array(_apply_judgement(target.id, ModeJudgementEventScript.RESULT_HIT, clear_at, 0.0, 1.0, {"reason": "avoidance_clear"}))
 	return outputs
 
 func _apply_judgement(target_id: String, judgement: String, position_sec: float, offset_sec: float, accuracy: float, extra_metadata: Dictionary = {}) -> Array:
@@ -342,7 +342,7 @@ func _apply_judgement(target_id: String, judgement: String, position_sec: float,
 	target.judged = true
 	_targets[index] = target
 
-	var hit := judgement == ModeJudgementEvent.RESULT_HIT
+	var hit := judgement == ModeJudgementEventScript.RESULT_HIT
 	var score_delta := 0
 	var combo_delta := -_combo
 	if hit:
@@ -363,7 +363,7 @@ func _apply_judgement(target_id: String, judgement: String, position_sec: float,
 	}
 	metadata.merge(extra_metadata, true)
 	var target_ref := _target_ref(target)
-	var judgement_event := ModeJudgementEvent.new({
+	var judgement_event := ModeJudgementEventScript.new({
 		"mode_id": _mode_id,
 		"target_ref": target_ref,
 		"position_sec": position_sec,
@@ -425,7 +425,7 @@ func _all_targets_judged() -> bool:
 	return not _targets.is_empty() and _targets.all(func(target: Dictionary) -> bool: return bool(target.judged))
 
 func _accuracy_for(target: Dictionary, offset_sec: float, judgement: String) -> float:
-	if judgement != ModeJudgementEvent.RESULT_HIT:
+	if judgement != ModeJudgementEventScript.RESULT_HIT:
 		return 0.0
 	if String(target.kind) == "avoidance":
 		return 1.0
@@ -481,7 +481,7 @@ func _target_id(raw_target: Dictionary, fallback: String) -> String:
 func _int_array(value: Variant) -> Array[int]:
 	var result: Array[int] = []
 	if value is Array:
-		for item in value:
+		for item: Variant in value:
 			result.append(int(item))
 	elif value is int:
 		result.append(value)
